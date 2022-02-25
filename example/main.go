@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	remote "github.com/lixh00/nacos-viper-remote"
 	"github.com/spf13/viper"
-	remote "github.com/yoyofxteam/nacos-viper-remote"
 	"os"
 	"os/signal"
 	"syscall"

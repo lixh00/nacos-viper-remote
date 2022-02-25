@@ -2,11 +2,11 @@ package nacos_viper_remote
 
 import (
 	"fmt"
-	"github.com/nacos-group/nacos-sdk-go/clients"
-	"github.com/nacos-group/nacos-sdk-go/clients/config_client"
-	"github.com/nacos-group/nacos-sdk-go/common/constant"
-	"github.com/nacos-group/nacos-sdk-go/common/logger"
-	"github.com/nacos-group/nacos-sdk-go/vo"
+	"github.com/nacos-group/nacos-sdk-go/v2/clients"
+	"github.com/nacos-group/nacos-sdk-go/v2/clients/config_client"
+	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
+	"github.com/nacos-group/nacos-sdk-go/v2/common/logger"
+	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 	"github.com/spf13/viper"
 	"strings"
 )
@@ -30,8 +30,8 @@ func NewNacosConfigManager(option *Option) (*nacosConfigManager, error) {
 		NamespaceId:         option.NamespaceId,
 		TimeoutMs:           5000,
 		NotLoadCacheAtStart: true,
-		RotateTime:          "1h",
-		MaxAge:              3,
+		LogDir:              "logs/nacos/log",
+		CacheDir:            "logs/nacos/cache",
 		LogLevel:            "info",
 	}
 
@@ -44,10 +44,7 @@ func NewNacosConfigManager(option *Option) (*nacosConfigManager, error) {
 		clientConfig.SecretKey = option.Auth.SecretKey
 		clientConfig.OpenKMS = option.Auth.OpenKMS
 	}
-	client, err := clients.CreateConfigClient(map[string]interface{}{
-		"serverConfigs": serverConfigs,
-		"clientConfig":  clientConfig,
-	})
+	client, err := clients.NewConfigClient(vo.NacosClientParam{ClientConfig: &clientConfig, ServerConfigs: serverConfigs})
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, err
